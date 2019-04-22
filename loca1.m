@@ -147,14 +147,11 @@ while (1),
         JJ(i,i)=JJ(i,i)*(1+lambda);
     end;
     
-    % *******************************************************************
-    % Partie 1.3-5: A COMPLETER AVEC LA FONCTION TransFromParam(.)******%
 
     dsoluL = inv(JJ) * J' * L ;
     dmatPos = TransFromParam(dsoluL);
     matPos = dmatPos * matPos ; 
     
-    % *******************************************************************
    
     soluL=ParamFromTrans(matPos);
     for p=1:N
@@ -182,20 +179,15 @@ figure(3); colormap(gray(256));
 image(image_l); title 'Object left image (after convergence)';
 DrawModel(alphaU_1,alphaV_1,u0_1,v0_1,modA,matPos); % 3D model drawing in left image
 
-% *******************************************************************
-% Partie 1.3-6: A COMPLETER POUR PROJETER DANS LA SECONDE IMAGE *** %
 
 matPos = matPos_c1_c2*matPos ;
 
-% *******************************************************************
+
 
 figure(4); colormap(gray(256));
 image(image_r); title 'Object right image (after convergence)';
 DrawModel(alphaU_2,alphaV_2,u0_2,v0_2,modA,matPos); % 3D model drawing in left image
 
-
-
-%% ------------------- FUNCTIONS ------------------------------ %%
 
 function mod_A = Trans_2_modA(nbr, app3d)
 mod_A = zeros(nbr, 6);
@@ -207,10 +199,7 @@ end;
 
 function DrawModel(alphaU,alphaV,u0,v0,modA,matPos)
 for p=1:size(modA, 1)
-    
-    % ********************************************************************
-    % Partie 1.3-2: Completer
-    %   **** A COMPLETER. UTILISER LES FONCTIONS Projection et TransPoint **** 
+     
     [X1 Y1 Z1] = TransPoint(matPos, modA(p,1) , modA(p,2) , modA(p,3));
     [X2 Y2 Z2] = TransPoint(matPos,modA(p,4),modA(p,5),modA(p,6));
     [u1 v1] = Projection(alphaU,alphaV,u0,v0,X1,Y1,Z1);
@@ -271,9 +260,6 @@ Z_mod=matPos(3,1)*X_ini + matPos(3,2)*Y_ini + matPos(3,3)*Z_ini + matPos(3,4);
 
 
 function [u,v]=Projection(alphaU,alphaV,u0,v0,X,Y,Z)
-% ********************************************************************
-% Partie 1.3-2: Completer
-%   ******* A COMPLETER ******* %
 u= [alphaU    0     u0]* [X Y Z]';
 v= [   0    alphaV  v0]* [X Y Z]';
 u = u/Z;
@@ -284,9 +270,6 @@ v = v/Z;
 function [crit]=EvalCrit(N,App2d,App3d_mod)
 err=0;
     for p=1:N;
-        % **************************************************************
-        % Partie 1.3-3: Completer
-        %   ******* A COMPLETER (POUR ERR)******* %
     F1 = App2d(p,1:3) * App3d_mod(p,1:3)' ;
     F2 = App2d(p,1:3) * App3d_mod(p,4:6)' ;
     err = err + F1^2 + F2^2;
@@ -294,15 +277,11 @@ err=0;
 crit=sqrt(err/2*N);
 
 function [dyda,y0]=GlobaleDerivative(vectN,X,Y,Z)
-% ********************************************************************
-% Partie 1.3-4: Completer
-%   ******* A COMPLETER (MODIFIER) ******* %
 dyda(1,1)=vectN * [0; -Z ;Y];
 dyda(2,1)=vectN * [ Z ; 0;-X];
 dyda(3,1)=vectN * [-Y; X ; 0];
 dyda(4,1)=vectN(1) ;
 dyda(5,1)=vectN(2) ;
 dyda(6,1)=vectN(3) ;
-% ********************************************************************
 y0=vectN(1)*X + vectN(2)*Y + vectN(3)*Z;
 
